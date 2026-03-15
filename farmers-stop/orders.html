@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Orders – Farmers Stop</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    .tracker-steps { display:flex;gap:0;margin:16px 0 24px;overflow-x:auto; }
+    .tr-step {
+      flex:1;min-width:100px;text-align:center;padding:12px 8px;
+      font-size:0.78rem;font-weight:600;color:#ccc;position:relative;
+    }
+    .tr-step::after {
+      content:'';position:absolute;top:20px;left:50%;right:-50%;
+      height:2px;background:#eee;z-index:0;
+    }
+    .tr-step:last-child::after { display:none; }
+    .tr-step.done { color:var(--leaf); }
+    .tr-step.done::after { background:var(--leaf); }
+    .tr-step .dot {
+      width:28px;height:28px;border-radius:50%;background:#eee;
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 6px;font-size:0.9rem;position:relative;z-index:1;
+    }
+    .tr-step.done .dot { background:var(--leaf);color:white; }
+    .order-expand { display:none; padding:14px 0 0; }
+    .order-expand.open { display:block; }
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="nav-left">
+    <a href="index.html" class="logo"><span class="logo-icon">🌿</span><span class="logo-text">Farmers<span class="logo-accent">Stop</span></span></a>
+  </div>
+  <div class="nav-right">
+    <a href="products.html" class="nav-link">🌿 Shop</a>
+    <a href="cart.html" class="nav-link cart-link"><i class="fa fa-shopping-basket"></i> <span class="cart-count" id="cartCount">0</span></a>
+  </div>
+</header>
+
+<div class="orders-page">
+  <h1 style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--mud);margin-bottom:8px">📦 My Orders</h1>
+  <p style="color:var(--text-light);margin-bottom:28px">Track your fresh produce deliveries</p>
+
+  <div id="noOrders" style="display:none;text-align:center;padding:60px 20px">
+    <div style="font-size:5rem;margin-bottom:20px">📭</div>
+    <h2 style="color:var(--mud);font-family:'Playfair Display',serif">No orders yet</h2>
+    <p style="color:var(--text-light);margin:12px 0 24px">Your fresh produce orders will appear here</p>
+    <a href="products.html" class="btn-primary">🌿 Start Shopping</a>
+  </div>
+
+  <div id="ordersList"></div>
+</div>
+
+<div class="toast"></div>
+
+<script src="js/data.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  updateCartCount();
+  renderOrders();
+});
+
+// Sample orders if none exist
+function getSampleOrders() {
+  return [
+    { id:'FS-847291', items:[{name:'Alphonso Mangoes',emoji:'🥭',price:180,qty:2},{name:'Fresh Spinach',emoji:'🥬',price:22,qty:3}], total:426, date:'15/01/2025', status:'Delivered' },
+    { id:'FS-731048', items:[{name:'Desi Tomatoes',emoji:'🍅',price:28,qty:5},{name:'Green Capsicum',emoji:'🫑',price:45,qty:2}], total:230, date:'14/01/2025', status:'In Transit' },
+    { id:'FS-620394', items:[{name:'Watermelon',emoji:'🍉',price:25,qty:4}], total:140, date:'13/01/2025', status:'Placed' },
+  ];
+}
+
+function renderOrders() {
+  let orders = JSON.parse(localStorage.getItem('fs_orders') || '[]');
+  if (!orders.length) orders = getSampleOrders();
+  const el = document.getElementById('ordersList');
+  const noEl = document.getElementById('noOrders');
+  if (!orders.length) { noEl.style.display = 'block'; return; }
+  noEl.style.display = 'none';
+
+  el.innerHTML = orders.map((o, idx) => {
+    const statusClass = {
+      'Delivered': 'status-delivered',
+      'In Transit': 'status-transit',
+      'Placed': 'status-placed'
+    }[o.status] || 'status-placed';
+
+    const steps = ['Placed','Packed','Dispatched','In Transit','Delivered'];
+    const stepIdx = steps.indexOf(o.status === 'Delivered' ? 'Delivered' : o.status);
+
+    return `
+    <div class="order-card">
+      <div class="order-header">
+        <div>
+          <div class="order-id">Order ${o.id}</div>
+          <div style="font-size:0.82rem;color:var(--text-light);margin-top:2px">📅 ${o.date}</div>
+        </div>
+        <span class="order-status ${statusClass}">${o.status}</span>
+      </div>
+      <div class="order-items">
+        ${o.items.map(i => `${i.emoji} ${i.name} × ${i.qty}`).join('  •  ')}
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div class="order-total">Total: ₹${o.total}</div>
+        <button onclick="toggleTrack(${idx})" style="padding:7px 16px;background:var(--cream);border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;font-family:'Nunito',sans-serif;color:var(--mud);">
+          📍 Track Order
+        </button>
+      </div>
+
+      <!-- TRACKER -->
+      <div class="order-expand" id="track-${idx}">
+        <div class="tracker-steps">
+          ${steps.map((s,i) => `
+            <div class="tr-step ${i <= stepIdx ? 'done' : ''}">
+              <div class="dot">${i <= stepIdx ? '✓' : (i+1)}</div>
+              ${s}
+            </div>
+          `).join('')}
+        </div>
+        ${o.status !== 'Delivered' ? `
+        <div style="background:#FFF8E7;border-radius:8px;padding:12px;font-size:0.85rem;color:var(--mud);">
+          🚜 Your order is on its way! Expected by <strong>5–8 PM today</strong>
+        </div>` : `
+        <div style="background:#F0FFF4;border-radius:8px;padding:12px;font-size:0.85rem;color:var(--leaf-dark);">
+          ✅ Delivered successfully! Hope you enjoyed your fresh produce.
+          <a href="products.html" style="color:var(--leaf);font-weight:700;margin-left:8px">Reorder →</a>
+        </div>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleTrack(idx) {
+  const el = document.getElementById(`track-${idx}`);
+  el.classList.toggle('open');
+}
+</script>
+</body>
+</html>

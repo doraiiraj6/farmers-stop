@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment – Farmers Stop</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    .upi-logos { display:flex;gap:12px;flex-wrap:wrap;margin:16px 0; }
+    .upi-logo {
+      padding:10px 18px;border:1.5px solid var(--border);border-radius:8px;
+      font-size:0.88rem;font-weight:600;cursor:pointer;background:white;
+      transition:all 0.2s;
+    }
+    .upi-logo:hover,.upi-logo.sel { border-color:var(--leaf);background:#F0FFF4;color:var(--leaf-dark); }
+    .steps { display:flex;gap:0;margin-bottom:32px;overflow-x:auto; }
+    .step {
+      display:flex;align-items:center;gap:8px;padding:10px 20px;
+      background:var(--cream);font-size:0.85rem;font-weight:600;color:var(--text-light);
+      border-bottom:3px solid transparent; white-space:nowrap;
+    }
+    .step.done { color:var(--leaf);border-bottom-color:var(--leaf); }
+    .step.active { color:var(--mud);border-bottom-color:var(--mud); }
+    .step-num {
+      width:24px;height:24px;border-radius:50%;background:var(--border);
+      color:white;display:flex;align-items:center;justify-content:center;
+      font-size:0.78rem;font-weight:700;
+    }
+    .step.done .step-num { background:var(--leaf); }
+    .step.active .step-num { background:var(--mud); }
+    .address-card {
+      background:white;border-radius:var(--radius-lg);padding:20px;
+      border:1.5px solid var(--border);margin-bottom:16px;cursor:pointer;
+      transition:all 0.2s;
+    }
+    .address-card.selected { border-color:var(--leaf);background:#F0FFF4; }
+    .address-card h4 { color:var(--mud);margin-bottom:6px; }
+    .address-card p { font-size:0.88rem;color:var(--text-light); }
+    .pay-success {
+      display:none;text-align:center;padding:60px 20px;
+    }
+    .pay-success .big-emoji { font-size:6rem;margin-bottom:20px; }
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="nav-left">
+    <a href="index.html" class="logo"><span class="logo-icon">🌿</span><span class="logo-text">Farmers<span class="logo-accent">Stop</span></span></a>
+  </div>
+  <div class="nav-right">
+    <a href="cart.html" class="nav-link">← Back to Cart</a>
+  </div>
+</header>
+
+<div class="payment-page">
+
+  <!-- STEPS -->
+  <div class="steps">
+    <div class="step done"><span class="step-num">✓</span> Cart</div>
+    <div class="step active"><span class="step-num">2</span> Delivery</div>
+    <div class="step"><span class="step-num">3</span> Payment</div>
+    <div class="step"><span class="step-num">4</span> Confirm</div>
+  </div>
+
+  <div id="mainPayment">
+    <h1>🚚 Delivery & Payment</h1>
+
+    <!-- DELIVERY ADDRESS -->
+    <h3 style="font-family:'Playfair Display',serif;color:var(--mud);margin:24px 0 14px">Delivery Address</h3>
+    <div class="address-card selected" id="addr1">
+      <h4>🏠 Home</h4>
+      <p id="savedAddr">Loading saved address…</p>
+      <p style="color:var(--leaf);font-size:0.82rem;margin-top:6px;">✅ Selected</p>
+    </div>
+    <div style="margin-bottom:24px">
+      <button onclick="toggleNewAddr()" style="padding:10px 20px;background:var(--cream);border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:600;font-size:0.9rem;">
+        + Add New Address
+      </button>
+    </div>
+    <div id="newAddrForm" style="display:none;background:white;border-radius:var(--radius-lg);padding:24px;margin-bottom:24px;box-shadow:0 2px 10px var(--shadow);">
+      <div class="form-group"><label>Full Address</label><input type="text" placeholder="House no, Street, Area" /></div>
+      <div class="form-row">
+        <div class="form-group"><label>City</label><input type="text" placeholder="City" /></div>
+        <div class="form-group"><label>PIN Code</label><input type="text" placeholder="400001" /></div>
+      </div>
+      <button class="auth-btn" style="width:auto;padding:10px 24px;" onclick="toggleNewAddr()">Save Address</button>
+    </div>
+
+    <!-- PAYMENT METHODS -->
+    <h3 style="font-family:'Playfair Display',serif;color:var(--mud);margin-bottom:14px">Payment Method</h3>
+    <div class="payment-methods">
+      <button class="pay-method selected" onclick="selectMethod('upi',this)">📲 UPI</button>
+      <button class="pay-method" onclick="selectMethod('card',this)">💳 Card</button>
+      <button class="pay-method" onclick="selectMethod('netbanking',this)">🏦 Net Banking</button>
+      <button class="pay-method" onclick="selectMethod('cod',this)">💵 Cash on Delivery</button>
+    </div>
+
+    <!-- UPI -->
+    <div class="pay-form" id="upiForm">
+      <h3>📲 Pay via UPI</h3>
+      <div class="upi-logos">
+        <div class="upi-logo sel" onclick="selectUPI(this)">📱 GPay</div>
+        <div class="upi-logo" onclick="selectUPI(this)">💜 PhonePe</div>
+        <div class="upi-logo" onclick="selectUPI(this)">🔵 Paytm</div>
+        <div class="upi-logo" onclick="selectUPI(this)">🟠 BHIM</div>
+      </div>
+      <div class="form-group">
+        <label>UPI ID</label>
+        <input type="text" placeholder="yourname@upi" id="upiId" />
+      </div>
+      <p style="font-size:0.82rem;color:var(--text-light);margin-top:8px">A payment request will be sent to your UPI app</p>
+    </div>
+
+    <!-- CARD -->
+    <div class="pay-form" id="cardForm" style="display:none">
+      <h3>💳 Pay via Card</h3>
+      <div class="form-group">
+        <label>Card Number</label>
+        <input type="text" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" oninput="formatCard(this)"/>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Expiry</label><input type="text" placeholder="MM/YY" maxlength="5"/></div>
+        <div class="form-group"><label>CVV</label><input type="text" placeholder="CVV" maxlength="3"/></div>
+      </div>
+      <div class="form-group"><label>Name on Card</label><input type="text" placeholder="Full Name"/></div>
+    </div>
+
+    <!-- NET BANKING -->
+    <div class="pay-form" id="netbankingForm" style="display:none">
+      <h3>🏦 Net Banking</h3>
+      <div class="upi-logos">
+        <div class="upi-logo sel" onclick="selectUPI(this)">SBI</div>
+        <div class="upi-logo" onclick="selectUPI(this)">HDFC</div>
+        <div class="upi-logo" onclick="selectUPI(this)">ICICI</div>
+        <div class="upi-logo" onclick="selectUPI(this)">Axis</div>
+        <div class="upi-logo" onclick="selectUPI(this)">Kotak</div>
+      </div>
+    </div>
+
+    <!-- COD -->
+    <div class="pay-form" id="codForm" style="display:none">
+      <h3>💵 Cash on Delivery</h3>
+      <p style="color:var(--text-light);line-height:1.7">
+        Pay cash when your fresh produce is delivered to your door.<br/>
+        Extra ₹20 COD handling fee applies.
+      </p>
+      <div style="background:#FFF8E7;border-radius:8px;padding:14px;margin-top:14px;font-size:0.88rem;color:var(--mud);">
+        ⚠️ Please keep exact change ready. Our delivery partner will arrive between 5–8 PM.
+      </div>
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <div style="background:white;border-radius:var(--radius-lg);padding:24px;margin-top:24px;box-shadow:0 2px 10px var(--shadow);">
+      <h3 style="font-family:'Playfair Display',serif;color:var(--mud);margin-bottom:16px">Order Summary</h3>
+      <div id="payCartItems" style="font-size:0.9rem;color:var(--text-light);margin-bottom:14px"></div>
+      <div style="display:flex;justify-content:space-between;font-weight:700;font-size:1.1rem;color:var(--mud);border-top:1px solid var(--border);padding-top:12px">
+        <span>Total Payable</span>
+        <span id="payTotal">₹0</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" style="margin-top:24px;padding:16px 40px;font-size:1.05rem;width:100%;background:var(--leaf);color:white;border:none;border-radius:12px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;" onclick="placeOrder()">
+      🌾 Place Order & Pay
+    </button>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="pay-success" id="paySuccess">
+    <div class="big-emoji">✅</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--mud)">Order Placed!</h1>
+    <p style="color:var(--text-light);font-size:1.1rem;margin:12px 0 8px">Your fresh produce is being packed by farmers right now.</p>
+    <p style="color:var(--leaf);font-weight:700;font-size:1.1rem;margin-bottom:30px">Expected Delivery: Today 5–8 PM 🚜</p>
+    <div style="background:#F0FFF4;border-radius:12px;padding:20px;margin-bottom:28px;display:inline-block">
+      <p style="color:var(--mud);font-size:0.9rem">Order ID: <strong id="orderId">FS-XXXXXX</strong></p>
+      <p style="color:var(--text-light);font-size:0.85rem;margin-top:4px">You'll receive an SMS & notification shortly</p>
+    </div>
+    <div>
+      <a href="orders.html" class="btn-primary" style="margin-right:12px">View My Orders</a>
+      <a href="index.html" class="btn-outline">Continue Shopping</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast"></div>
+
+<script src="js/data.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const user = JSON.parse(localStorage.getItem('fs_user') || '{}');
+  document.getElementById('savedAddr').textContent = user.address || '123, Green Lane, Farmer Nagar, Pune – 411001';
+  const total = localStorage.getItem('fs_order_total') || '0';
+  document.getElementById('payTotal').textContent = `₹${total}`;
+  const cart = getCart();
+  document.getElementById('payCartItems').innerHTML = cart.map(i => `<div style="margin-bottom:6px">• ${i.name} × ${i.qty} — ₹${i.price * i.qty}</div>`).join('');
+  updateCartCount();
+});
+
+function selectMethod(method, btn) {
+  document.querySelectorAll('.pay-method').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  ['upiForm','cardForm','netbankingForm','codForm'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById(method + 'Form').style.display = 'block';
+}
+
+function selectUPI(el) {
+  el.closest('.upi-logos').querySelectorAll('.upi-logo').forEach(l => l.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function toggleNewAddr() {
+  const f = document.getElementById('newAddrForm');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+function formatCard(el) {
+  el.value = el.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim();
+}
+
+function placeOrder() {
+  const orderId = 'FS-' + Math.floor(100000 + Math.random() * 900000);
+  document.getElementById('orderId').textContent = orderId;
+  // Save to orders
+  const cart = getCart();
+  const orders = JSON.parse(localStorage.getItem('fs_orders') || '[]');
+  orders.unshift({
+    id: orderId,
+    items: cart,
+    total: localStorage.getItem('fs_order_total'),
+    date: new Date().toLocaleDateString('en-IN'),
+    status: 'Placed'
+  });
+  localStorage.setItem('fs_orders', JSON.stringify(orders));
+  saveCart([]);
+  document.getElementById('mainPayment').style.display = 'none';
+  document.getElementById('paySuccess').style.display = 'block';
+  showToast('🎉 Order placed successfully!');
+}
+</script>
+</body>
+</html>

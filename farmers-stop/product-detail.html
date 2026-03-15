@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Detail – Farmers Stop</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    .detail-page { max-width: 1100px; margin: 0 auto; padding: 30px 24px; }
+    .detail-layout { display: flex; gap: 40px; flex-wrap: wrap; margin-bottom: 50px; }
+    .detail-img {
+      width: 340px; height: 340px; background: var(--cream);
+      border-radius: 20px; display: flex; align-items: center; justify-content: center;
+      font-size: 9rem; flex-shrink: 0; box-shadow: 0 4px 20px var(--shadow);
+    }
+    .detail-info { flex: 1; min-width: 260px; }
+    .detail-farm { color: var(--leaf); font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; }
+    .detail-name { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--mud); margin-bottom: 12px; }
+    .detail-price { font-size: 2rem; font-weight: 900; color: var(--mud); }
+    .detail-mrp { font-size: 1rem; color: #aaa; text-decoration: line-through; margin-left: 10px; }
+    .detail-disc { color: var(--leaf); font-weight: 700; font-size: 1rem; margin-left: 6px; }
+    .detail-desc { line-height: 1.8; color: var(--text-light); margin: 18px 0; }
+    .qty-row { display: flex; align-items: center; gap: 16px; margin: 20px 0; }
+    .qty-row label { font-weight: 600; }
+    .qty-control-lg { display: flex; align-items: center; gap: 12px; }
+    .qty-btn-lg {
+      width: 36px; height: 36px; background: var(--leaf); color: white;
+      border: none; border-radius: 8px; font-size: 1.2rem;
+      font-weight: 700; cursor: pointer;
+    }
+    .qty-num-lg { font-size: 1.2rem; font-weight: 700; min-width: 32px; text-align: center; }
+    .detail-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-cart {
+      padding: 13px 28px; background: var(--leaf); color: white;
+      border: none; border-radius: 10px; font-family: 'Nunito', sans-serif;
+      font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-cart:hover { background: var(--leaf-dark); transform: translateY(-2px); }
+    .btn-buy {
+      padding: 13px 28px; background: var(--mango); color: white;
+      border: none; border-radius: 10px; font-family: 'Nunito', sans-serif;
+      font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-buy:hover { background: #d35400; }
+    .detail-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+    .detail-tag {
+      background: var(--cream); border: 1px solid var(--border);
+      padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;
+      color: var(--text-light);
+    }
+    .breadcrumb {
+      font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;
+    }
+    .breadcrumb a { color: var(--leaf); }
+    .suggest-section { margin-top: 50px; }
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="nav-left">
+    <a href="index.html" class="logo"><span class="logo-icon">🌿</span><span class="logo-text">Farmers<span class="logo-accent">Stop</span></span></a>
+  </div>
+  <div class="nav-right">
+    <a href="cart.html" class="nav-link cart-link"><i class="fa fa-shopping-basket"></i> <span class="cart-count" id="cartCount">0</span> Cart</a>
+  </div>
+</header>
+
+<div class="detail-page">
+  <div class="breadcrumb" id="breadcrumb">
+    <a href="index.html">Home</a> › <a href="products.html">Products</a> › <span id="breadName">…</span>
+  </div>
+
+  <div class="detail-layout">
+    <div class="detail-img" id="detailImg">🌿</div>
+    <div class="detail-info">
+      <div class="detail-farm" id="detailFarm">🌾 Loading…</div>
+      <h1 class="detail-name" id="detailName">Loading…</h1>
+      <div>
+        <span class="detail-price" id="detailPrice">₹--</span>
+        <span class="detail-mrp" id="detailMrp">₹--</span>
+        <span class="detail-disc" id="detailDisc">--%</span>
+      </div>
+      <p class="detail-desc" id="detailDesc">Fresh, farm-direct produce harvested early morning for maximum freshness. No preservatives, no chemicals — just pure nature.</p>
+
+      <div class="qty-row">
+        <label>Quantity:</label>
+        <div class="qty-control-lg">
+          <button class="qty-btn-lg" onclick="changeQty(-1)">−</button>
+          <span class="qty-num-lg" id="detailQty">1</span>
+          <button class="qty-btn-lg" onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+
+      <div class="detail-actions">
+        <button class="btn-cart" onclick="addDetailToCart()">🛒 Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow()">⚡ Buy Now</button>
+      </div>
+
+      <div class="detail-tags">
+        <span class="detail-tag">✅ Same-Day Fresh</span>
+        <span class="detail-tag">🌿 No Pesticides</span>
+        <span class="detail-tag">🚚 Free Delivery ₹299+</span>
+        <span class="detail-tag">🔄 Easy Returns</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUGGESTIONS -->
+  <div class="suggest-section">
+    <h2 class="section-title">🌾 You May Also Like</h2>
+    <div class="products-grid" id="suggestedProducts"></div>
+  </div>
+</div>
+
+<div class="toast"></div>
+
+<script src="js/data.js"></script>
+<script>
+let currentQty = 1;
+let currentProd = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateCartCount();
+  const params = new URLSearchParams(window.location.search);
+  const id = parseInt(params.get('id'));
+  currentProd = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
+  renderDetail();
+  renderSuggestions();
+});
+
+function renderDetail() {
+  const p = currentProd;
+  document.getElementById('detailImg').textContent = p.emoji;
+  document.getElementById('detailFarm').textContent = `🌾 ${p.farm}`;
+  document.getElementById('detailName').textContent = p.name;
+  document.getElementById('detailPrice').textContent = `₹${p.price}/${p.unit}`;
+  document.getElementById('detailMrp').textContent = `₹${p.mrp}`;
+  document.getElementById('detailDisc').textContent = `${p.discount}% off`;
+  document.getElementById('breadName').textContent = p.name;
+  document.title = `${p.name} – Farmers Stop`;
+}
+
+function renderSuggestions() {
+  const el = document.getElementById('suggestedProducts');
+  const samecat = PRODUCTS.filter(p => p.cat === currentProd.cat && p.id !== currentProd.id).slice(0, 4);
+  el.innerHTML = samecat.map(renderProductCard).join('');
+}
+
+function changeQty(delta) {
+  currentQty = Math.max(1, currentQty + delta);
+  document.getElementById('detailQty').textContent = currentQty;
+}
+
+function addDetailToCart() {
+  for (let i = 0; i < currentQty; i++) addToCart(currentProd.id);
+}
+
+function buyNow() {
+  addDetailToCart();
+  window.location.href = 'cart.html';
+}
+</script>
+</body>
+</html>

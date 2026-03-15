@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In – Farmers Stop</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<div class="auth-page">
+  <!-- Animated leaves background -->
+  <div class="auth-leaves">
+    <span style="top:5%;left:8%">🍃</span>
+    <span style="top:15%;left:80%;animation-delay:1s">🌿</span>
+    <span style="top:50%;left:5%;animation-delay:2s">🍀</span>
+    <span style="top:70%;left:85%;animation-delay:0.5s">🌱</span>
+    <span style="top:85%;left:20%;animation-delay:1.5s">🍃</span>
+    <span style="top:35%;left:90%;animation-delay:2.5s">🌿</span>
+    <span style="top:60%;left:50%;animation-delay:3s">🍀</span>
+  </div>
+
+  <div class="auth-box">
+    <div class="auth-logo">
+      <h1>🌿 FarmersStop</h1>
+      <p>Where farms are right away to your home</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="showTab('login')">Sign In</div>
+      <div class="auth-tab" onclick="showTab('register')">Register</div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="loginForm">
+      <div class="form-group">
+        <label>📱 Phone or Email</label>
+        <input type="text" id="loginId" placeholder="Enter your phone or email" />
+      </div>
+      <div class="form-group">
+        <label>🔒 Password</label>
+        <input type="password" id="loginPass" placeholder="Your password" />
+      </div>
+      <button class="auth-btn" onclick="doLogin()">Sign In 🌾</button>
+      <div class="auth-divider">— or —</div>
+      <button class="guest-btn" onclick="guestBrowse()">🛒 Browse as Guest</button>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="registerForm" style="display:none">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input type="text" id="regName" placeholder="Your full name" />
+      </div>
+      <div class="form-group">
+        <label>📱 Phone Number</label>
+        <input type="tel" id="regPhone" placeholder="+91 XXXXXXXXXX" />
+      </div>
+      <div class="form-group">
+        <label>📧 Email (optional)</label>
+        <input type="email" id="regEmail" placeholder="your@email.com" />
+      </div>
+      <div class="form-group">
+        <label>📍 Delivery Address</label>
+        <input type="text" id="regAddress" placeholder="Your full address" />
+      </div>
+      <div class="form-group">
+        <label>🔒 Password</label>
+        <input type="password" id="regPass" placeholder="Create a password" />
+      </div>
+      <button class="auth-btn" onclick="doRegister()">Create Account 🌱</button>
+      <div class="auth-divider">— or —</div>
+      <button class="guest-btn" onclick="guestBrowse()">🛒 Browse as Guest</button>
+    </div>
+
+    <p style="text-align:center;font-size:0.78rem;color:#aaa;margin-top:20px">
+      By continuing, you agree to our Terms & Conditions
+    </p>
+  </div>
+</div>
+
+<div class="toast" id="authToast"></div>
+
+<script>
+function showTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0 && tab==='login') || (i===1 && tab==='register'));
+  });
+  document.getElementById('loginForm').style.display = tab==='login' ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab==='register' ? 'block' : 'none';
+}
+
+function toast(msg) {
+  const t = document.getElementById('authToast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function doLogin() {
+  const id = document.getElementById('loginId').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  if (!id || !pass) { toast('⚠️ Please fill in all fields'); return; }
+  // Admin check
+  if (id === 'admin' && pass === 'admin123') {
+    localStorage.setItem('fs_user', JSON.stringify({ name: 'Admin', role: 'admin' }));
+    window.location.href = 'admin.html';
+    return;
+  }
+  // Normal login
+  localStorage.setItem('fs_user', JSON.stringify({ name: id, role: 'user' }));
+  toast('✅ Welcome back! Redirecting…');
+  setTimeout(() => window.location.href = 'index.html', 1200);
+}
+
+function doRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const pass = document.getElementById('regPass').value;
+  if (!name || !phone || !pass) { toast('⚠️ Please fill required fields'); return; }
+  localStorage.setItem('fs_user', JSON.stringify({ name, phone, role: 'user' }));
+  toast('🎉 Account created! Welcome to FarmersStop!');
+  setTimeout(() => window.location.href = 'index.html', 1500);
+}
+
+function guestBrowse() {
+  window.location.href = 'products.html';
+}
+</script>
+</body>
+</html>

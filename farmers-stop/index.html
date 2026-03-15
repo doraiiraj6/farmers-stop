@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Farmers Stop – Where Farms Come Right to Your Home</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- ========== NAVBAR ========== -->
+<header class="navbar">
+  <div class="nav-left">
+    <a href="index.html" class="logo">
+      <span class="logo-icon">🌿</span>
+      <span class="logo-text">Farmers<span class="logo-accent">Stop</span></span>
+    </a>
+    <div class="location-bar">
+      <i class="fa fa-map-marker-alt"></i>
+      <span>Deliver to <strong>Your Location</strong></span>
+    </div>
+  </div>
+  <div class="nav-center">
+    <form class="search-form" action="products.html" method="get">
+      <select name="cat" class="search-cat">
+        <option value="">All</option>
+        <option value="fruits">Fruits</option>
+        <option value="vegetables">Vegetables</option>
+        <option value="leafy">Leafy Greens</option>
+        <option value="seasonal">Seasonal</option>
+      </select>
+      <input type="text" name="q" placeholder="Search fresh produce, farmers market finds…" class="search-input"/>
+      <button type="submit" class="search-btn"><i class="fa fa-search"></i></button>
+    </form>
+  </div>
+  <div class="nav-right">
+    <a href="login.html" class="nav-link"><i class="fa fa-user"></i> Sign In</a>
+    <a href="cart.html" class="nav-link cart-link">
+      <i class="fa fa-shopping-basket"></i>
+      <span class="cart-count" id="cartCount">0</span>
+      Cart
+    </a>
+    <a href="admin.html" class="nav-link admin-link"><i class="fa fa-cog"></i> Admin</a>
+  </div>
+</header>
+
+<!-- ========== TICKER AD ========== -->
+<div class="ticker-wrap">
+  <div class="ticker-move">
+    🌽 Farm-Fresh Corn arriving today! &nbsp;|&nbsp; 🍅 Tomatoes at ₹18/kg – Village Direct! &nbsp;|&nbsp; 🥬 Spinach Offer: Buy 2 Get 1 Free &nbsp;|&nbsp; 🥭 Alphonso Mangoes Season Open! &nbsp;|&nbsp; 🫑 Bell Peppers Flash Sale – 30% OFF &nbsp;|&nbsp; 🍌 Organic Bananas ₹40/dozen &nbsp;|&nbsp; Free delivery above ₹299 🚜
+  </div>
+</div>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="hero-leaves">
+    <span class="leaf leaf1">🍃</span>
+    <span class="leaf leaf2">🌿</span>
+    <span class="leaf leaf3">🍀</span>
+    <span class="leaf leaf4">🌱</span>
+    <span class="leaf leaf5">🍃</span>
+    <span class="leaf leaf6">🌿</span>
+  </div>
+  <div class="hero-content">
+    <p class="hero-tagline">Direct from the field, delivered to your door</p>
+    <h1 class="hero-title">Farmers<span class="hero-accent">Stop</span></h1>
+    <p class="hero-sub">Where farms are right away to your home 🌾</p>
+    <div class="hero-btns">
+      <a href="products.html" class="btn-primary">Shop Fresh Now</a>
+      <a href="login.html" class="btn-outline">Sign In / Register</a>
+    </div>
+    <div class="hero-badges">
+      <span>✅ Same-Day Harvest</span>
+      <span>✅ Village-Direct Price</span>
+      <span>✅ No Middlemen</span>
+    </div>
+  </div>
+  <div class="hero-image">
+    <div class="produce-circle">
+      <div class="produce-item p1">🥦</div>
+      <div class="produce-item p2">🍅</div>
+      <div class="produce-item p3">🥕</div>
+      <div class="produce-item p4">🫑</div>
+      <div class="produce-item p5">🍆</div>
+      <div class="produce-item p6">🧅</div>
+      <div class="produce-center">🌾</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== OFFER BANNER ========== -->
+<section class="offer-strip">
+  <div class="offer-card">
+    <span class="offer-emoji">🚚</span>
+    <div><strong>Free Delivery</strong><br/>Orders above ₹299</div>
+  </div>
+  <div class="offer-card">
+    <span class="offer-emoji">🌅</span>
+    <div><strong>Morning Fresh</strong><br/>Harvested before 6 AM</div>
+  </div>
+  <div class="offer-card">
+    <span class="offer-emoji">🤝</span>
+    <div><strong>Direct from Farmer</strong><br/>No middlemen</div>
+  </div>
+  <div class="offer-card">
+    <span class="offer-emoji">♻️</span>
+    <div><strong>Zero Waste Packaging</strong><br/>Eco-friendly only</div>
+  </div>
+</section>
+
+<!-- ========== CATEGORIES ========== -->
+<section class="section categories-section">
+  <h2 class="section-title">Shop by Category</h2>
+  <div class="categories-grid">
+    <a href="products.html?cat=fruits" class="cat-card cat-fruits">
+      <div class="cat-icon">🍎</div>
+      <div class="cat-name">Fruits</div>
+      <div class="cat-count">42 items</div>
+    </a>
+    <a href="products.html?cat=vegetables" class="cat-card cat-vegetables">
+      <div class="cat-icon">🥦</div>
+      <div class="cat-name">Vegetables</div>
+      <div class="cat-count">68 items</div>
+    </a>
+    <a href="products.html?cat=leafy" class="cat-card cat-leafy">
+      <div class="cat-icon">🥬</div>
+      <div class="cat-name">Leafy Greens</div>
+      <div class="cat-count">24 items</div>
+    </a>
+    <a href="products.html?cat=seasonal" class="cat-card cat-seasonal">
+      <div class="cat-icon">🥭</div>
+      <div class="cat-name">Seasonal Fruits</div>
+      <div class="cat-count">18 items</div>
+    </a>
+    <a href="products.html?cat=herbs" class="cat-card cat-herbs">
+      <div class="cat-icon">🌿</div>
+      <div class="cat-name">Herbs & Spices</div>
+      <div class="cat-count">31 items</div>
+    </a>
+    <a href="products.html?cat=grains" class="cat-card cat-grains">
+      <div class="cat-icon">🌾</div>
+      <div class="cat-name">Grains & Pulses</div>
+      <div class="cat-count">22 items</div>
+    </a>
+  </div>
+</section>
+
+<!-- ========== TODAY'S MARKET (Flash Sale) ========== -->
+<section class="section flash-section">
+  <div class="flash-header">
+    <h2 class="section-title">⚡ Today's Village Market</h2>
+    <div class="flash-timer">
+      Ends in: <span id="countdown" class="timer-display">05:42:18</span>
+    </div>
+  </div>
+  <div class="products-grid" id="flashProducts">
+    <!-- JS fills this -->
+  </div>
+</section>
+
+<!-- ========== ADS BANNER ========== -->
+<div class="ad-banner">
+  <div class="ad-slide active">
+    🌽 <strong>KHARIF SEASON SALE</strong> – Up to 40% off on all seasonal produce! Limited stock. <a href="products.html?sale=1">Shop Now →</a>
+  </div>
+  <div class="ad-slide">
+    🍋 <strong>LEMON FEST</strong> – Fresh lemons ₹10/piece, direct from Vidarbha farms! <a href="products.html?cat=fruits">Grab Now →</a>
+  </div>
+  <div class="ad-slide">
+    🥕 <strong>CARROT BONANZA</strong> – Organic Nantes Carrots just ₹35/kg! <a href="products.html?cat=vegetables">Order Now →</a>
+  </div>
+</div>
+
+<!-- ========== NEW ARRIVALS ========== -->
+<section class="section">
+  <h2 class="section-title">🌱 Fresh New Arrivals</h2>
+  <div class="products-grid" id="newArrivals"><!-- JS fills --></div>
+</section>
+
+<!-- ========== FARMER STORY ========== -->
+<section class="farmer-story">
+  <div class="story-text">
+    <h2>🌾 How It Works</h2>
+    <p>Every day before sunrise, our partner farmers harvest the finest produce from their fields. By morning, it's sorted, packed, and on its way to your door — just like the weekly village market, but delivered to your home.</p>
+    <ul class="story-steps">
+      <li><span>1</span> Farmer harvests at dawn</li>
+      <li><span>2</span> Produce sorted at local hub</li>
+      <li><span>3</span> You order by 10 AM</li>
+      <li><span>4</span> Delivered by evening 🚜</li>
+    </ul>
+  </div>
+  <div class="story-visual">
+    <div class="story-icon-grid">
+      <div>🧑‍🌾</div><div>🌾</div><div>📦</div><div>🛵</div><div>🏠</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">🌿 FarmersStop</div>
+      <p>Where farms are right away to your home. Fresh, affordable, direct.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="products.html">All Products</a></li>
+        <li><a href="orders.html">My Orders</a></li>
+        <li><a href="login.html">Sign In</a></li>
+        <li><a href="admin.html">Admin Panel</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Categories</h4>
+      <ul>
+        <li><a href="products.html?cat=fruits">Fruits</a></li>
+        <li><a href="products.html?cat=vegetables">Vegetables</a></li>
+        <li><a href="products.html?cat=leafy">Leafy Greens</a></li>
+        <li><a href="products.html?cat=seasonal">Seasonal</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <p>📞 1800-FARMERS</p>
+      <p>📧 hello@farmersstop.in</p>
+      <p>🕐 Mon–Sun 6 AM – 9 PM</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 Farmers Stop. Made with 🌿 for India's farmers.</div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

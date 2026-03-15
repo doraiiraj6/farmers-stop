@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Products – Farmers Stop</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="nav-left">
+    <a href="index.html" class="logo">
+      <span class="logo-icon">🌿</span>
+      <span class="logo-text">Farmers<span class="logo-accent">Stop</span></span>
+    </a>
+  </div>
+  <div class="nav-center">
+    <form class="search-form" onsubmit="doSearch(event)">
+      <select id="searchCat" class="search-cat">
+        <option value="">All</option>
+        <option value="fruits">Fruits</option>
+        <option value="vegetables">Vegetables</option>
+        <option value="leafy">Leafy Greens</option>
+        <option value="seasonal">Seasonal</option>
+        <option value="herbs">Herbs</option>
+      </select>
+      <input type="text" id="searchQ" placeholder="Search fresh produce…" class="search-input"/>
+      <button type="submit" class="search-btn"><i class="fa fa-search"></i></button>
+    </form>
+  </div>
+  <div class="nav-right">
+    <a href="login.html" class="nav-link"><i class="fa fa-user"></i> Sign In</a>
+    <a href="cart.html" class="nav-link cart-link">
+      <i class="fa fa-shopping-basket"></i>
+      <span class="cart-count" id="cartCount">0</span> Cart
+    </a>
+  </div>
+</header>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-move">🌽 Fresh Corn arrived! &nbsp;|&nbsp; 🍅 Tomatoes ₹28/kg &nbsp;|&nbsp; 🥬 Buy 2 Get 1 Free Spinach &nbsp;|&nbsp; 🥭 Mango Season Open! &nbsp;|&nbsp; Free delivery ₹299+</div>
+</div>
+
+<!-- CATEGORY CHIPS -->
+<div style="background:white;padding:14px 28px;border-bottom:1px solid #E0D0C0;display:flex;gap:10px;overflow-x:auto;flex-wrap:wrap;">
+  <button class="chip-btn active" onclick="filterCat('',this)">🌈 All</button>
+  <button class="chip-btn" onclick="filterCat('fruits',this)">🍎 Fruits</button>
+  <button class="chip-btn" onclick="filterCat('vegetables',this)">🥦 Vegetables</button>
+  <button class="chip-btn" onclick="filterCat('leafy',this)">🥬 Leafy</button>
+  <button class="chip-btn" onclick="filterCat('seasonal',this)">🥭 Seasonal</button>
+  <button class="chip-btn" onclick="filterCat('herbs',this)">🌿 Herbs</button>
+</div>
+
+<style>
+.chip-btn {
+  padding: 7px 18px; border-radius: 20px; border: 1.5px solid var(--border);
+  background: white; font-family: 'Nunito', sans-serif; font-weight: 600;
+  font-size: 0.88rem; cursor: pointer; white-space: nowrap; transition: all 0.2s;
+  color: var(--text);
+}
+.chip-btn.active, .chip-btn:hover { background: var(--leaf); color: white; border-color: var(--leaf); }
+</style>
+
+<!-- MAIN LAYOUT -->
+<div class="page-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h3>💰 Price Range</h3>
+    <p style="font-size:0.82rem;color:var(--text-light)">Up to ₹<span id="priceVal">250</span></p>
+    <input type="range" class="price-range" min="10" max="500" value="250" id="priceRange" oninput="filterPrice(this.value)"/>
+
+    <h3 style="margin-top:20px">⭐ Rating</h3>
+    <label class="filter-option"><input type="checkbox" onchange="renderProducts()"/> 4★ & above</label>
+    <label class="filter-option"><input type="checkbox" onchange="renderProducts()"/> 3★ & above</label>
+
+    <h3>🌱 Type</h3>
+    <label class="filter-option"><input type="checkbox" id="filterFresh" onchange="renderProducts()"/> Fresh Only</label>
+    <label class="filter-option"><input type="checkbox" id="filterOrganic" onchange="renderProducts()"/> Organic</label>
+    <label class="filter-option"><input type="checkbox" id="filterOnSale" onchange="renderProducts()"/> On Sale</label>
+
+    <h3>📦 Availability</h3>
+    <label class="filter-option"><input type="checkbox"/> In Stock Only</label>
+  </aside>
+
+  <!-- PRODUCTS -->
+  <main class="main-content">
+    <div class="page-header">
+      <h2 id="pageTitle">All Fresh Produce</h2>
+      <select class="sort-select" onchange="renderProducts()">
+        <option value="default">Sort: Recommended</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="discount">Best Discount</option>
+      </select>
+    </div>
+
+    <div class="products-grid" id="productsGrid"></div>
+    <p id="noResults" style="display:none;text-align:center;padding:40px;color:var(--text-light);font-size:1.1rem;">
+      🌾 No products found. Try a different search or category.
+    </p>
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-bottom">© 2025 Farmers Stop. Made with 🌿 for India's farmers.</div>
+</footer>
+
+<div class="toast"></div>
+
+<script src="js/data.js"></script>
+<script>
+let currentCat = '';
+let maxPrice = 250;
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Read URL params
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('cat')) { currentCat = params.get('cat'); }
+  if (params.get('q')) { document.getElementById('searchQ').value = params.get('q'); }
+  updateCartCount();
+  renderProducts();
+});
+
+function filterCat(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderProducts();
+}
+
+function filterPrice(val) {
+  maxPrice = parseInt(val);
+  document.getElementById('priceVal').textContent = val;
+  renderProducts();
+}
+
+function doSearch(e) {
+  e.preventDefault();
+  renderProducts();
+}
+
+function renderProducts() {
+  const grid = document.getElementById('productsGrid');
+  const noRes = document.getElementById('noResults');
+  const q = document.getElementById('searchQ').value.toLowerCase();
+  const sort = document.querySelector('.sort-select').value;
+  const freshOnly = document.getElementById('filterFresh').checked;
+
+  let filtered = PRODUCTS.filter(p => {
+    if (currentCat && p.cat !== currentCat) return false;
+    if (q && !p.name.toLowerCase().includes(q) && !p.farm.toLowerCase().includes(q)) return false;
+    if (p.price > maxPrice) return false;
+    if (freshOnly && !p.fresh) return false;
+    return true;
+  });
+
+  if (sort === 'price-asc') filtered.sort((a,b) => a.price - b.price);
+  if (sort === 'price-desc') filtered.sort((a,b) => b.price - a.price);
+  if (sort === 'discount') filtered.sort((a,b) => b.discount - a.discount);
+
+  document.getElementById('pageTitle').textContent =
+    currentCat ? `${currentCat.charAt(0).toUpperCase()+currentCat.slice(1)} (${filtered.length})` :
+    `All Fresh Produce (${filtered.length})`;
+
+  if (!filtered.length) {
+    grid.innerHTML = '';
+    noRes.style.display = 'block';
+  } else {
+    noRes.style.display = 'none';
+    grid.innerHTML = filtered.map(renderProductCard).join('');
+  }
+}
+</script>
+</body>
+</html>
